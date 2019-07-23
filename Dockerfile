@@ -1,7 +1,7 @@
 #FROM ubuntu:18.04
 FROM alpine:latest
 
-LABEL maintainer="sysadmin@visualsoft.co.uk"
+LABEL maintainer="lee@leeblackwell.com"
 
 ARG GUSER=""
 ENV GUSER=$GUSER
