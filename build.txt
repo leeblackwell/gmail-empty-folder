@@ -1,0 +1,4 @@
+docker build . -t leeblackwell/gmail-empty-folder 
+docker build . -t leeblackwell/gmail-empty-folder -t 2019072301
+docker push leeblackwell/gmail-empty-folder
+

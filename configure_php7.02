@@ -1,0 +1,5 @@
+#!/bin/bash
+#Update first otherwise apt won't find anything...
+apt update
+export DEBIAN_FRONTEND=noninteractive
+apt install -y php php-imap
