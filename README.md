@@ -83,4 +83,4 @@ This is a hobby project; use at your own risk and you're *definitely* entirely a
 
 ## Thanks
 
-Thanks to @NeilInnes who had already written this script; I simply tweaked and containerized it.
+Thanks to [Neil Innes](https://github.com/NeilInnes) who had already written this script; I simply tweaked and containerized it.
