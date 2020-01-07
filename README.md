@@ -78,8 +78,10 @@ By 'naming' the container, you can run `docker container stop gmail-trash` and/o
 For a 'live' session:
 
 ```
-docker container run -it --env GUSER="somebody@gmail.com" --env GPASS="fgdu65rkjhgjhfd53" --name gmail-trash leeblackwell/gmail-empty-folder
+docker container run -it --env GUSER="somebody@gmail.com" --env GPASS="fgdu65rkjhgjhfd53" leeblackwell/gmail-empty-folder
 ```
+
+
 
 ## A word of warning
 
