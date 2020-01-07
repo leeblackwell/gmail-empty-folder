@@ -21,7 +21,7 @@ function script_empty_trash()
                 usleep(500000); //sleep for half a sec
             }
             @imap_delete($imap, $n);
-            echo progress_bar($n, $mbox->Nmsgs, $info = "Deleting ", $width = 50);
+            echo progress_bar($n, $mbox->Nmsgs, $info = "Deleting  ", $width = 50);
             if ($n % $intExpunge == 0) {
                 echo progress_bar($n, $mbox->Nmsgs, $info = "Expunging ", $width = 50);
                 imap_expunge($imap);
@@ -30,7 +30,7 @@ function script_empty_trash()
             }
             $intProcessed++;
             if ($intMax > 0) {
-                if ( $intProcessed > $intMax ) {
+                if ($intProcessed > $intMax) {
                     echo "Max reached - exiting.";
                     exit (0);
                 }
@@ -39,7 +39,7 @@ function script_empty_trash()
         @imap_close($imap, CL_EXPUNGE);
         return false;
     } else {
-        echo "Nothing to delete!".PHP_EOL;
+        echo "Nothing to delete!" . PHP_EOL;
         @imap_close($imap, CL_EXPUNGE);
         return true;
     }
@@ -50,12 +50,8 @@ function script_empty_trash()
 function main($argc, $argv)
 {
     global $user, $pass, $myfolder;
-    /* display errors only */
-    //error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
-    /* set signal handlers and time execution of the core routines */
     $timeBegin = script_microtime();
     signal_handler_set('signal_handler');
-    //script_list_boxes();
     echo "Emptying " . $myfolder . "...\n";
     $blnResult = false;
     while (!$blnResult) {
@@ -77,7 +73,6 @@ function signal_handler_set($handler)
         }
         pcntl_signal(SIGTERM, $handler);
         pcntl_signal(SIGINT, $handler);
-        #pcntl_signal(SIGKILL, $handler);
     }
 }
 
@@ -86,7 +81,6 @@ function signal_handler($signal)
 {
     if ($signal == SIGTERM || $signal == SIGINT || $signal = SIGKILL) {
         echo "\nScript interrupted! Cleaning up...\n";
-        //script_cleanup();
         exit(0);
     }
 }
@@ -96,20 +90,6 @@ function script_microtime()
 {
     list($msec, $sec) = explode(' ', microtime());
     return ((float)$msec + (float)$sec);
-}
-
-/* list all mail boxes on the gmail imap server
- * used for development, but not needed in the final version
- */
-
-function script_list_boxes()
-{
-    global $user, $pass, $myfolder;
-    $imap = imap_open("{imap.gmail.com:993/imap/ssl/novalidate-cert}", $user,
-        $pass) or die("Cannot connect: " . imap_last_error() . "\n");
-    $boxes = imap_list($imap, '{imap.gmail.com}', '*');
-    print_r($boxes);
-    imap_close($imap);
 }
 
 /* progress_bar
@@ -124,79 +104,79 @@ function progress_bar($done, $total, $info = "", $width = 50)
         "[" . $done . "/" . $total . "] " . $info);
 }
 
-$shortopts ='';
+$temparr = explode('/', $argv[0]);
+$me = array_pop($temparr);
+
+$shortopts = '';
 $shortopts .= "h::";
-$longopts  = array(
+$longopts = array(
     "user:",        // Required: username
     "pass:",        // Required: password
     "folder::",     // Optional: folder to empty
     "delay",        // Optional: insert a 0.5s sleep between each call
-    "max::",      // Optional: stop after processing n messages
+    "max::",        // Optional: stop after processing n messages
     "expunge::"     // Optional: expunge after n messages
 );
 $options = getopt($shortopts, $longopts);
 
-$temparr = explode('/',$argv[0]);
-$me=array_pop($temparr);
-
-if (array_key_exists('h',$options)) {
+if (array_key_exists('h', $options)) {
     echo "$me\n\n";
     echo "Usage:\n";
-    echo "--user jon.doe@gmail.com".PHP_EOL;
-    echo "      Required; login identity".PHP_EOL;
-    echo "--pass abc123".PHP_EOL;
-    echo "      Required; password".PHP_EOL;
-    echo "--folder MyFolderOfStuff".PHP_EOL;
-    echo "      Optional; folder to empty.  Default is [Gmail]/Bin".PHP_EOL;
-    echo "--delay".PHP_EOL;
-    echo "      Optional; inserts a 0.5s pause after each IMAP call; intended to reduce risk of rate limiting.".PHP_EOL;
-    echo "--expunge 250".PHP_EOL;
-    echo "      Optional; expunge every n messages.  Default is 250.".PHP_EOL;
-    echo "--max 999".PHP_EOL;
-    echo "      Optional; quit after processing n messages.  Default is to process all messages in the folder.".PHP_EOL;
+    echo "--user jon.doe@gmail.com" . PHP_EOL;
+    echo "      Required; login identity" . PHP_EOL;
+    echo "--pass abc123" . PHP_EOL;
+    echo "      Required; password" . PHP_EOL;
+    echo "--folder MyFolderOfStuff" . PHP_EOL;
+    echo "      Optional; folder to empty.  Default is [Gmail]/Bin" . PHP_EOL;
+    echo "--delay" . PHP_EOL;
+    echo "      Optional; inserts a 0.5s pause after each IMAP call; intended to reduce risk of rate limiting." . PHP_EOL;
+    echo "--expunge 250" . PHP_EOL;
+    echo "      Optional; expunge every n messages.  Default is 250." . PHP_EOL;
+    echo "--max 999" . PHP_EOL;
+    echo "      Optional; quit after processing n messages.  Default is to process all messages in the folder." . PHP_EOL;
     echo PHP_EOL;
-    echo "Options with values must be specified PHP style, eg. --option=\"wibble\"".PHP_EOL;
+    echo "Options with values must be specified PHP style, eg. --option=\"wibble\"" . PHP_EOL;
     echo PHP_EOL;
     exit(2);
 }
 
-$boolDelay=false;
-$intExpunge=250;
+$boolDelay = false;
+$intExpunge = 250;
 $myfolder = "[Gmail]/Bin";
-$intMax=0;
-$intProcessed=0;
-var_dump($options);
+$intMax = 0;
+$intProcessed = 0;
 
-if (!array_key_exists('user',$options)) {
-    echo "user err".PHP_EOL;
+if (!array_key_exists('user', $options)) {
+    echo "user err" . PHP_EOL;
     exit(1);
 }
-if (!array_key_exists('pass',$options)) {
-    echo "pass err".PHP_EOL;
+if (!array_key_exists('pass', $options)) {
+    echo "pass err" . PHP_EOL;
     exit(1);
 }
-if (array_key_exists('folder',$options)) {
+if (array_key_exists('folder', $options)) {
     $myfolder = $options["folder"];
-    } else {
+} else {
     $myfolder = "[Gmail]/Bin";
 }
-if (array_key_exists('delay',$options)) {
-    $boolDelay=true;
+if (array_key_exists('delay', $options)) {
+    $boolDelay = true;
 }
-if (array_key_exists('expunge',$options)) {
-    $intExpunge=$options["expunge"];
+if (array_key_exists('expunge', $options)) {
+    $intExpunge = $options["expunge"];
 }
-if (array_key_exists('max',$options)) {
-    $intMax=$options["max"];
+if (array_key_exists('max', $options)) {
+    $intMax = $options["max"];
 }
 
 
 $user = $options["user"];
 $pass = $options["pass"];
-print "User: " . $user . "\nPass: " . $pass . "\nFldr: " . $myfolder . "\nDelay: " . $boolDelay  ."\nMax: " . $intMax . "\nExpunge: " . $intExpunge . "\n";
+print "User: " . $user . "\nPass: " . $pass . "\nFldr: " . $myfolder . "\nDelay: " . $boolDelay . "\nMax: " . $intMax . "\nExpunge: " . $intExpunge . "\n";
 
 //exit (99);
 
 
 main($argc, $argv);
+echo PHP_EOL;
 ?>
