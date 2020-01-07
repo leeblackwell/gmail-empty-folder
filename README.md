@@ -60,7 +60,7 @@ docker pull leeblackwell/gmail-empty-folder
 You'll need to pass in username, password and (optionally) folder as environment variables:  
 1. `GUSER="somebody@gmail.com"`
 1. `GPASS="fgdu65rkjhgjhfd53"`
-1. `GFLDR="@FilteredNoiseThatIstWanted"`
+1. `GFLDR="@FilteredNoiseThatIsntWanted"`
 1. `FLAGS="--delay --max=5000 --expunge=333"`
 
 The FLAGS env variable is optional; it may be used for one or more of the additional options.
