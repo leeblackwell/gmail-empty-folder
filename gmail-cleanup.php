@@ -5,6 +5,7 @@ $imap = null;
 function script_empty_trash()
 {
     global $user, $pass, $myfolder, $boolDelay, $intExpunge, $intProcessed, $intMax;
+
     $imap = @imap_open("{imap.gmail.com:993/imap/ssl/novalidate-cert}" . $myfolder, $user, $pass, NIL,
         10) or die("can't connect: " . imap_last_error() . "\n");
     if ($imap == false) {
@@ -14,16 +15,17 @@ function script_empty_trash()
     if ($mbox == false) {
         return false;
     }
+    $initialmboxsize=$mbox->Nmsgs;
     if ($mbox->Nmsgs > 1) {
-        echo progress_bar(0, $mbox->Nmsgs, $info = "Starting ", $width = 50);
+        echo status_bar(0, $initialmboxsize, 0, $info = "Starting ");
         for ($n = 1; $mbox->Nmsgs > $n; $n++) {
             if ($boolDelay) {
                 usleep(500000); //sleep for half a sec
             }
             @imap_delete($imap, $n);
-            echo progress_bar($n, $mbox->Nmsgs, $info = "Deleting  ", $width = 50);
+            echo status_bar($intProcessed, $initialmboxsize, $n, $info = "Deleting  ".$myfolder);
             if ($n % $intExpunge == 0) {
-                echo progress_bar($n, $mbox->Nmsgs, $info = "Expunging ", $width = 50);
+                echo status_bar($intProcessed, $initialmboxsize, $n, $info = "Expunging ".$myfolder);
                 imap_expunge($imap);
                 $n = 1;
                 $mbox = @imap_check($imap);
@@ -51,14 +53,10 @@ function main($argc, $argv)
 {
     global $user, $pass, $myfolder;
     $timeBegin = script_microtime();
-    signal_handler_set('signal_handler');
-    echo "Emptying " . $myfolder . "...\n";
-    $blnResult = false;
-    while (!$blnResult) {
-        $blnResult = script_empty_trash();
-    }
+    $blnResult = script_empty_trash();
     $timeEnd = script_microtime();
-    echo 'Executed in: ' . round($timeEnd - $timeBegin, 3) . " seconds\n";
+    echo PHP_EOL.'Executed in: ' . round($timeEnd - $timeBegin, 3) . " seconds\n";
+    echo PHP_EOL;
     exit(0);
 }
 
@@ -92,16 +90,12 @@ function script_microtime()
     return ((float)$msec + (float)$sec);
 }
 
-/* progress_bar
-via: https://gist.github.com/mayconbordin
-Note: No license specified at Github
-*/
-function progress_bar($done, $total, $info = "", $width = 50)
+function status_bar($done, $total, $current, $info = "" )
 {
+    $width=40;
     $perc = round(($done * 100) / $total);
     $bar = round(($width * $perc) / 100);
-    return sprintf("  %s%%[%s>%s]%s\r", $perc, str_repeat("=", $bar), str_repeat(" ", $width - $bar),
-        "[" . $done . "/" . $total . "] " . $info);
+    return sprintf("  %s%%[%s>%s]%s\r", $perc, str_repeat("=", $bar), str_repeat(" ", $width - $bar), " Total:". $total . " Done:". $done . " Current:" . $current . " " . $info . "\033[K");
 }
 
 $temparr = explode('/', $argv[0]);
@@ -172,11 +166,10 @@ if (array_key_exists('max', $options)) {
 
 $user = $options["user"];
 $pass = $options["pass"];
-print "User: " . $user . "\nPass: " . $pass . "\nFldr: " . $myfolder . "\nDelay: " . $boolDelay . "\nMax: " . $intMax . "\nExpunge: " . $intExpunge . "\n";
+//print "User: " . $user . "\nPass: " . $pass . "\nFldr: " . $myfolder . "\nDelay: " . $boolDelay . "\nMax: " . $intMax . "\nExpunge: " . $intExpunge . "\n";
 
 //exit (99);
 
 
 main($argc, $argv);
-echo PHP_EOL;
 ?>
