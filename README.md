@@ -24,13 +24,13 @@ You're not gonna wanna use your regular password or disable 2FA (you do use 2FA,
 To run directly, execute:
 
 ```
-gmail-cleanup.php USER PASS {FOLDER}
+gmail-cleanup.php --user=USER --pass=PASS --folder=FOLDER
 ```
 
 Where:
 1. USER is your google login; eg `somebody@gmail.com`
 1. PASS is the application password you created in the previous step; eg `fgdu65rkjhgjhfd53`
-1. FOLDER is optional.  If not specified, we'll attempt to empty the trash.  If specified, we'll empty that folder instead. eg `@FilteredNoiseThatIstWanted`
+1. FOLDER is optional.  If not specified, we'll attempt to empty the trash.  If specified, we'll empty that folder instead. eg `@FilteredNoiseThatIsntWanted`
 
 Output will look something like this:
 ```
@@ -43,6 +43,11 @@ Emptying [Gmail]/Bin...
 
 Oh, yeah.  173k to delete.  This is why this script exists ;)
 
+For January 2020, there are some new options:
+1. `--delay` Inserts a 0.5s pause after each message is processed; intended to try and avoid Google's rate limiting
+1. `--max=999` Quits after processing n messages
+1. `--expunge=500` Expunge after n messages
+
 ## Docker container
 
 This script works well inside a container; there's a version available via [Docker Hub](https://hub.docker.com/r/leeblackwell/gmail-empty-folder).
@@ -53,10 +58,14 @@ docker pull leeblackwell/gmail-empty-folder
 ```
 
 You'll need to pass in username, password and (optionally) folder as environment variables:  
-1. GUSER="somebody@gmail.com"
-1. GPASS="fgdu65rkjhgjhfd53"
-1. GFLDR="@FilteredNoiseThatIstWanted"
+1. `GUSER="somebody@gmail.com"`
+1. `GPASS="fgdu65rkjhgjhfd53"`
+1. `GFLDR="@FilteredNoiseThatIstWanted"`
+1. `FLAGS="--delay --max=5000 --expunge=333"`
 
+The FLAGS env variable is optional; it may be used for one or more of the additional options.
+
+If you choose to use GFLDR or FLAGS, duplicate the `--env` statements for GFLDR and FLAGS in the docker command lines below.
 
 To run in the background as a daemon:
 
@@ -76,6 +85,10 @@ docker container run -it --env GUSER="somebody@gmail.com" --env GPASS="fgdu65rkj
 
 The same rate-limiting rules that appear to be present for Gmail itself, also apply to IMAP activities.  It's entirely possible that if you run several sessions concurrently, Google will revoke the application password and put your account on lockdown (forced to change pass, validate ID etc) - at least, they did to me.  I was running five containers operating on five different folders; maybe that's too much for Google.
 You might be best to run one at a time. Either way, YMMV.
+
+## Upcoming OAuth requirements
+
+I'm aware that [Google is going to force "less secure apps" to use OAuth](https://gsuiteupdates.googleblog.com/2019/12/less-secure-apps-oauth-google-username-password-incorrect.html) - it's on the TODO list :) 
 
 ## Disclaimer
 
