@@ -34,11 +34,7 @@ Where:
 
 Output will look something like this:
 ```
-User: somebody@gmail.com
-Pass: fgdu65rkjhgjhfd53
-Fldr: [Gmail]/Bin
-Emptying [Gmail]/Bin...
-  0%[>                                                  ][13/173615] Deleting 
+  1%[>                                        ] Total:822 Done:7 Current:8 Deleting  [Gmail]/Bin
 ```
 
 Oh, yeah.  173k to delete.  This is why this script exists ;)
