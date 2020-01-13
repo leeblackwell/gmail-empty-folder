@@ -95,6 +95,7 @@ function status_bar($done, $total, $current, $info = "" )
     $width=40;
     $perc = round(($done * 100) / $total);
     $bar = round(($width * $perc) / 100);
+    //echo "\n\$done ".$done."\t\$total ".$total."\t \$current ".$current."\n";
     return sprintf("  %s%%[%s>%s]%s\r", $perc, str_repeat("=", $bar), str_repeat(" ", $width - $bar), " Total:". $total . " Done:". $done . " Current:" . $current . " " . $info . "\033[K");
 }
 
