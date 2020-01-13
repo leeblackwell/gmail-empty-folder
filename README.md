@@ -41,6 +41,7 @@ Oh, yeah.  173k to delete.  This is why this script exists ;)
 
 For January 2020, there are some new options:
 1. `--delay` Inserts a 0.5s pause after each message is processed; intended to try and avoid Google's rate limiting
+1. `--delaylength=500000` Override the default delay length to n microseconds
 1. `--max=999` Quits after processing n messages
 1. `--expunge=500` Expunge after n messages
 

@@ -4,7 +4,7 @@ $imap = null;
 
 function script_empty_trash()
 {
-    global $user, $pass, $myfolder, $boolDelay, $intExpunge, $intProcessed, $intMax;
+    global $user, $pass, $myfolder, $boolDelay, $intExpunge, $intProcessed, $intMax, $intDelayLength;
 
     $imap = @imap_open("{imap.gmail.com:993/imap/ssl/novalidate-cert}" . $myfolder, $user, $pass, NIL,
         10) or die("can't connect: " . imap_last_error() . "\n");
@@ -20,7 +20,7 @@ function script_empty_trash()
         echo status_bar(0, $initialmboxsize, 0, $info = "Starting ");
         for ($n = 1; $mbox->Nmsgs > $n; $n++) {
             if ($boolDelay) {
-                usleep(500000); //sleep for half a sec
+                usleep($intDelayLength); //sleep for half a sec
             }
             @imap_delete($imap, $n);
             echo status_bar($intProcessed, $initialmboxsize, $n, $info = "Deleting  ".$myfolder);
@@ -109,6 +109,7 @@ $longopts = array(
     "pass:",        // Required: password
     "folder::",     // Optional: folder to empty
     "delay",        // Optional: insert a 0.5s sleep between each call
+    "delaylength::",        // Optional: insert a 0.5s sleep between each call
     "max::",        // Optional: stop after processing n messages
     "expunge::"     // Optional: expunge after n messages
 );
@@ -125,6 +126,8 @@ if (array_key_exists('h', $options)) {
     echo "      Optional; folder to empty.  Default is [Gmail]/Bin" . PHP_EOL;
     echo "--delay" . PHP_EOL;
     echo "      Optional; inserts a 0.5s pause after each IMAP call; intended to reduce risk of rate limiting." . PHP_EOL;
+    echo "--delaylength" . PHP_EOL;
+    echo "      Optional; override 0.5s delay; express as microseconds - 500000=0.5s, " . PHP_EOL;
     echo "--expunge 250" . PHP_EOL;
     echo "      Optional; expunge every n messages.  Default is 250." . PHP_EOL;
     echo "--max 999" . PHP_EOL;
@@ -140,6 +143,7 @@ $intExpunge = 250;
 $myfolder = "[Gmail]/Bin";
 $intMax = 0;
 $intProcessed = 0;
+$intDelayLength = 500000;
 
 if (!array_key_exists('user', $options)) {
     echo "user err" . PHP_EOL;
@@ -156,6 +160,9 @@ if (array_key_exists('folder', $options)) {
 }
 if (array_key_exists('delay', $options)) {
     $boolDelay = true;
+}
+if (array_key_exists('delaylength', $options)) {
+    $intDelayLength = $options["delaylength"];
 }
 if (array_key_exists('expunge', $options)) {
     $intExpunge = $options["expunge"];
