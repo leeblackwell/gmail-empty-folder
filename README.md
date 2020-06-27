@@ -45,6 +45,10 @@ For January 2020, there are some new options:
 1. `--max=999` Quits after processing n messages
 1. `--expunge=500` Expunge after n messages
 
+For June 2020, new options:
+1. `--daemon` Essentially, run in a forver loop; when finished, start again
+1. `--daemonsleep=300` How long we wait inbetween runs when running in daemon mode (default is 300s)
+
 ## Docker container
 
 This script works well inside a container; there's a version available via [Docker Hub](https://hub.docker.com/r/leeblackwell/gmail-empty-folder).
