@@ -37,8 +37,6 @@ Output will look something like this:
   1%[>                                        ] Total:822 Done:7 Current:8 Deleting  [Gmail]/Bin
 ```
 
-Oh, yeah.  173k to delete.  This is why this script exists ;)
-
 For January 2020, there are some new options:
 1. `--delay` Inserts a 0.5s pause after each message is processed; intended to try and avoid Google's rate limiting
 1. `--delaylength=500000` Override the default delay length to n microseconds
@@ -51,7 +49,7 @@ For June 2020, new options:
 
 ## Docker container
 
-Deleted following Docker's subscription modcel changes.
+Deleted following Docker's subscription model changes.
 
 ## A word of warning
 
