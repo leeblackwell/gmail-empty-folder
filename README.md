@@ -51,6 +51,30 @@ For June 2020, new options:
 
 ## Docker container
 
+Deleted following Docker's subscription modcel changes.
+
+## A word of warning
+
+The same rate-limiting rules that appear to be present for Gmail itself, also apply to IMAP activities.  It's entirely possible that if you run several sessions concurrently, Google will revoke the application password and put your account on lockdown (forced to change pass, validate ID etc) - at least, they did to me.  I was running five containers operating on five different folders; maybe that's too much for Google.
+You might be best to run one at a time. Either way, YMMV.
+
+## Upcoming OAuth requirements
+
+I'm aware that [Google is going to force "less secure apps" to use OAuth](https://gsuiteupdates.googleblog.com/2019/12/less-secure-apps-oauth-google-username-password-incorrect.html) - it's on the TODO list :) 
+
+## Disclaimer
+
+This is a hobby project; use at your own risk and you're *definitely* entirely and completely responsible for data loss (given that's what this thing is designed to do) as well as your choice allow this script to access your mailbox.
+
+## Thanks
+
+Thanks to [Neil Innes](https://github.com/NeilInnes) who had already written this script (used with permission!); I simply tweaked and containerized it.
+
+
+## Content no longer relevant
+
+### Docker container
+
 This script works well inside a container; there's a version available via [Docker Hub](https://hub.docker.com/r/leeblackwell/gmail-empty-folder).
 
 If you wish to pre-fetch the container image:
@@ -81,22 +105,3 @@ For a 'live' session:
 ```
 docker container run -it --env GUSER="somebody@gmail.com" --env GPASS="fgdu65rkjhgjhfd53" leeblackwell/gmail-empty-folder
 ```
-
-
-
-## A word of warning
-
-The same rate-limiting rules that appear to be present for Gmail itself, also apply to IMAP activities.  It's entirely possible that if you run several sessions concurrently, Google will revoke the application password and put your account on lockdown (forced to change pass, validate ID etc) - at least, they did to me.  I was running five containers operating on five different folders; maybe that's too much for Google.
-You might be best to run one at a time. Either way, YMMV.
-
-## Upcoming OAuth requirements
-
-I'm aware that [Google is going to force "less secure apps" to use OAuth](https://gsuiteupdates.googleblog.com/2019/12/less-secure-apps-oauth-google-username-password-incorrect.html) - it's on the TODO list :) 
-
-## Disclaimer
-
-This is a hobby project; use at your own risk and you're *definitely* entirely and completely responsible for data loss (given that's what this thing is designed to do) as well as your choice allow this script to access your mailbox.
-
-## Thanks
-
-Thanks to [Neil Innes](https://github.com/NeilInnes) who had already written this script (used with permission!); I simply tweaked and containerized it.
